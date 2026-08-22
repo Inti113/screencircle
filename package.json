@@ -24,7 +24,8 @@
       "!**/node_modules/electron-builder/**"
     ],
     "asarUnpack": [
-      "node_modules/ffmpeg-static/**"
+      "node_modules/ffmpeg-static/**",
+      "bin/**"
     ],
     "win": {
       "target": "nsis",

@@ -39,6 +39,40 @@
     pointer-events: none;
   }
 
+  video.no-flip {
+    transform: none;
+  }
+
+  #source-toggle {
+    -webkit-app-region: no-drag;
+    position: absolute;
+    top: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 3px;
+    background: rgba(0,0,0,0.45);
+    border-radius: 999px;
+    padding: 2px;
+    z-index: 2;
+  }
+
+  #source-toggle button {
+    border: none;
+    background: transparent;
+    color: #cfcfd6;
+    border-radius: 999px;
+    padding: 3px 7px;
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  #source-toggle button.active {
+    background: #4da3ff;
+    color: #0d1117;
+  }
+
   #resize-handle {
     -webkit-app-region: no-drag;
     position: absolute;
@@ -70,6 +104,10 @@
 </head>
 <body>
   <div id="circle">
+    <div id="source-toggle">
+      <button type="button" id="source-camera-btn" class="active" title="Camera">📷</button>
+      <button type="button" id="source-phone-btn" title="Phone">📱</button>
+    </div>
     <video id="video" autoplay muted playsinline></video>
     <div id="error"></div>
   </div>

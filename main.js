@@ -5,6 +5,84 @@ const os = require('os');
 const { spawn } = require('child_process');
 const ffmpegPath = require('ffmpeg-static').replace('app.asar', 'app.asar.unpacked');
 
+// ---------- scrcpy / adb (Android phone mirroring) ----------
+
+function getScrcpyPaths() {
+  if (process.platform === 'win32') {
+    const dir = path.join(__dirname, 'bin', 'scrcpy-win').replace('app.asar', 'app.asar.unpacked');
+    return { scrcpy: path.join(dir, 'scrcpy.exe'), adb: path.join(dir, 'adb.exe') };
+  }
+  // macOS / Linux: rely on a system install (e.g. `brew install scrcpy` on Mac)
+  const candidates = ['/opt/homebrew/bin', '/usr/local/bin', '/usr/bin'];
+  const found = candidates.find(dir => fs.existsSync(path.join(dir, 'scrcpy')));
+  const dir = found || '';
+  return {
+    scrcpy: dir ? path.join(dir, 'scrcpy') : 'scrcpy',
+    adb: dir ? path.join(dir, 'adb') : 'adb'
+  };
+}
+
+let phoneMirrorProcess = null;
+
+function runAdb(args) {
+  const { adb } = getScrcpyPaths();
+  return new Promise((resolve) => {
+    const proc = spawn(adb, args);
+    let stdout = '';
+    proc.stdout.on('data', d => { stdout += d.toString(); });
+    proc.on('close', () => resolve(stdout));
+    proc.on('error', () => resolve(''));
+  });
+}
+
+ipcMain.handle('phone-check-android', async () => {
+  const list = await runAdb(['devices']);
+  const lines = list.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('List of devices'));
+  if (lines.length === 0) return { connected: false };
+  const [serial, status] = lines[0].split(/\s+/);
+  if (status === 'unauthorized') return { connected: false, unauthorized: true };
+  if (status !== 'device') return { connected: false };
+  const model = (await runAdb(['-s', serial, 'shell', 'getprop', 'ro.product.model'])).trim();
+  return { connected: true, name: model || serial };
+});
+
+ipcMain.handle('phone-mirror-start', () => {
+  if (phoneMirrorProcess) return true;
+  const { scrcpy } = getScrcpyPaths();
+  const display = screen.getPrimaryDisplay();
+  const w = 320;
+  const h = 640;
+  const x = display.workArea.x + display.workArea.width - w - 24;
+  const y = display.workArea.y + display.workArea.height - h - 24;
+  try {
+    phoneMirrorProcess = spawn(scrcpy, [
+      '--window-title=ScreenCircle - Phone',
+      `--window-x=${Math.round(x)}`,
+      `--window-y=${Math.round(y)}`,
+      `--window-width=${w}`,
+      `--window-height=${h}`,
+      '--no-audio',
+      '--stay-awake'
+    ]);
+    phoneMirrorProcess.on('close', () => { phoneMirrorProcess = null; });
+    phoneMirrorProcess.on('error', () => { phoneMirrorProcess = null; });
+    return true;
+  } catch (e) {
+    phoneMirrorProcess = null;
+    return false;
+  }
+});
+
+ipcMain.handle('phone-mirror-stop', () => {
+  if (phoneMirrorProcess) {
+    phoneMirrorProcess.kill();
+    phoneMirrorProcess = null;
+  }
+  return true;
+});
+
+ipcMain.handle('get-platform', () => process.platform);
+
 let mainWindow;
 let widgetWindow;
 let cameraWindow;
@@ -267,6 +345,7 @@ app.whenReady().then(() => {
 
 app.on('will-quit', () => {
   globalShortcut.unregisterAll();
+  if (phoneMirrorProcess) phoneMirrorProcess.kill();
 });
 
 app.on('window-all-closed', () => {
