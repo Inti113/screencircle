@@ -107,8 +107,10 @@ async function pollPhone() {
 
   if (mirroringActive) {
     const status = await window.cameraApi.phoneCheckAndroid();
+    if (source !== 'phone') return;
     if (!status.connected) {
       await window.cameraApi.phoneMirrorStop();
+      if (source !== 'phone') return;
       mirroringActive = false;
       setStatus('instructions');
     }
@@ -118,9 +120,14 @@ async function pollPhone() {
   if (iphoneStream) return;
 
   const status = await window.cameraApi.phoneCheckAndroid();
+  if (source !== 'phone') return;
   if (status.connected) {
     setStatus('checking');
     const started = await window.cameraApi.phoneMirrorStart();
+    if (source !== 'phone') {
+      if (started) window.cameraApi.phoneMirrorStop();
+      return;
+    }
     if (started) {
       mirroringActive = true;
       setStatus('mirroring', status.name || '');
@@ -136,6 +143,7 @@ async function pollPhone() {
 
   if (platform === 'darwin') {
     const ok = await tryIphoneOnMac();
+    if (source !== 'phone') return;
     if (ok) return;
   }
 
