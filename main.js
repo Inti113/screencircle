@@ -35,14 +35,47 @@ function runAdb(args) {
   });
 }
 
+function parseAdbDevices(list) {
+  return list.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('List of devices'));
+}
+
+function setupWifiForDevice(serial) {
+  // Fire-and-forget: switch this USB-connected device into tcpip mode and
+  // remember its Wi-Fi IP so future sessions can reconnect without a cable.
+  (async () => {
+    await runAdb(['-s', serial, 'tcpip', '5555']);
+    await new Promise(r => setTimeout(r, 1500));
+    const routeOut = await runAdb(['-s', serial, 'shell', 'ip', 'route']);
+    const match = routeOut.match(/src (\d+\.\d+\.\d+\.\d+)/);
+    if (match) {
+      const ip = match[1];
+      await runAdb(['connect', `${ip}:5555`]);
+      saveSettings({ ...loadSettings(), lastPhoneIp: ip });
+    }
+  })();
+}
+
 ipcMain.handle('phone-check-android', async () => {
-  const list = await runAdb(['devices']);
-  const lines = list.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('List of devices'));
+  let list = await runAdb(['devices']);
+  let lines = parseAdbDevices(list);
+
+  if (lines.length === 0) {
+    const { lastPhoneIp } = loadSettings();
+    if (lastPhoneIp) {
+      await runAdb(['connect', `${lastPhoneIp}:5555`]);
+      list = await runAdb(['devices']);
+      lines = parseAdbDevices(list);
+    }
+  }
+
   if (lines.length === 0) return { connected: false };
   const [serial, status] = lines[0].split(/\s+/);
   if (status === 'unauthorized') return { connected: false, unauthorized: true };
   if (status !== 'device') return { connected: false };
   const model = (await runAdb(['-s', serial, 'shell', 'getprop', 'ro.product.model'])).trim();
+  if (!serial.includes(':')) {
+    setupWifiForDevice(serial);
+  }
   return { connected: true, name: model || serial };
 });
 
