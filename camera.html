@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    overflow: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  #circle {
+    -webkit-app-region: drag;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.45);
+    border: 3px solid rgba(255,255,255,0.85);
+    box-sizing: border-box;
+    background: #111;
+    cursor: move;
+  }
+
+  #circle.square {
+    border-radius: 14px;
+  }
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+    pointer-events: none;
+  }
+
+  #resize-handle {
+    -webkit-app-region: no-drag;
+    position: absolute;
+    right: 6%;
+    bottom: 6%;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    border: 2px solid rgba(0,0,0,0.3);
+    cursor: nwse-resize;
+  }
+
+  #error {
+    -webkit-app-region: drag;
+    display: none;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: -apple-system, "Segoe UI", sans-serif;
+    font-size: 11px;
+    color: #fff;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+</style>
+</head>
+<body>
+  <div id="circle">
+    <video id="video" autoplay muted playsinline></video>
+    <div id="error"></div>
+  </div>
+  <div id="resize-handle"></div>
+  <script src="camera.js"></script>
+</body>
+</html>
