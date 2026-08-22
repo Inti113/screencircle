@@ -24,13 +24,13 @@ jobs:
 
       - name: Build (Windows)
         if: runner.os == 'Windows'
-        run: npx electron-builder --win --config.win.signAndEditExecutable=false --config.directories.output=dist
+        run: npx electron-builder --win --config.win.signAndEditExecutable=false --config.directories.output=dist --publish never
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
 
       - name: Build (macOS)
         if: runner.os == 'macOS'
-        run: npx electron-builder --mac --config.directories.output=dist
+        run: npx electron-builder --mac --config.directories.output=dist --publish never
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: false
 
