@@ -142,6 +142,25 @@ function createMainWindow() {
   });
   mainWindow.setMenuBarVisibility(false);
   mainWindow.loadFile('index.html');
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+    closeAllAuxWindows();
+    app.quit();
+  });
+}
+
+function closeAllAuxWindows() {
+  [widgetWindow, cameraWindow, infoOverlayWindow, ...overlayWindows].forEach(win => {
+    if (win && !win.isDestroyed()) win.destroy();
+  });
+  widgetWindow = null;
+  cameraWindow = null;
+  infoOverlayWindow = null;
+  overlayWindows = [];
+  if (phoneMirrorProcess) {
+    phoneMirrorProcess.kill();
+    phoneMirrorProcess = null;
+  }
 }
 
 function createWidgetWindow() {
