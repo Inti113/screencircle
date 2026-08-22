@@ -82,7 +82,16 @@ const STRINGS = {
     phone_instructions_iphone_mac: 'You can also connect an iPhone via cable — it will be detected automatically.',
     phone_instructions_iphone_windows: 'iPhone mirroring is only available on Mac.',
     region_overlay_hint: 'Drag to select a region — Esc to cancel',
-    language: 'Language'
+    language: 'Language',
+    gate_subtitle: 'Enter your activation code',
+    gate_button: 'Activate',
+    gate_note: 'The code is locked to this device once activated.',
+    gate_error_empty: 'Enter a code',
+    gate_error_invalid: 'Invalid code',
+    gate_error_used: 'This code is already activated on another device',
+    gate_error_network: 'Connection error, try again',
+    gate_error_bad_request: 'Something went wrong, try again',
+    gate_error_method: 'Something went wrong, try again'
   },
   ru: {
     what_to_record: 'Что записывать',
@@ -149,7 +158,16 @@ const STRINGS = {
     phone_instructions_iphone_mac: 'Также можно подключить iPhone по кабелю — он определится автоматически.',
     phone_instructions_iphone_windows: 'Зеркалирование iPhone доступно только на Mac.',
     region_overlay_hint: 'Выделите область мышью — Esc для отмены',
-    language: 'Язык'
+    language: 'Язык',
+    gate_subtitle: 'Введите код активации',
+    gate_button: 'Активировать',
+    gate_note: 'Код привязывается к этому устройству и подходит только для него.',
+    gate_error_empty: 'Введите код',
+    gate_error_invalid: 'Неверный код',
+    gate_error_used: 'Этот код уже активирован на другом устройстве',
+    gate_error_network: 'Ошибка соединения, попробуйте снова',
+    gate_error_bad_request: 'Что-то пошло не так, попробуйте снова',
+    gate_error_method: 'Что-то пошло не так, попробуйте снова'
   },
   de: {
     what_to_record: 'Was aufgenommen werden soll',
@@ -216,7 +234,16 @@ const STRINGS = {
     phone_instructions_iphone_mac: 'Sie können auch ein iPhone per Kabel anschließen — es wird automatisch erkannt.',
     phone_instructions_iphone_windows: 'iPhone-Spiegelung ist nur auf dem Mac verfügbar.',
     region_overlay_hint: 'Bereich mit der Maus auswählen — Esc zum Abbrechen',
-    language: 'Sprache'
+    language: 'Sprache',
+    gate_subtitle: 'Aktivierungscode eingeben',
+    gate_button: 'Aktivieren',
+    gate_note: 'Der Code wird nach der Aktivierung fest an dieses Gerät gebunden.',
+    gate_error_empty: 'Code eingeben',
+    gate_error_invalid: 'Ungültiger Code',
+    gate_error_used: 'Dieser Code ist bereits auf einem anderen Gerät aktiviert',
+    gate_error_network: 'Verbindungsfehler, versuchen Sie es erneut',
+    gate_error_bad_request: 'Etwas ist schiefgelaufen, versuchen Sie es erneut',
+    gate_error_method: 'Etwas ist schiefgelaufen, versuchen Sie es erneut'
   },
   es: {
     what_to_record: 'Qué grabar',
@@ -283,7 +310,16 @@ const STRINGS = {
     phone_instructions_iphone_mac: 'También puedes conectar un iPhone por cable — se detectará automáticamente.',
     phone_instructions_iphone_windows: 'La duplicación de iPhone solo está disponible en Mac.',
     region_overlay_hint: 'Arrastra para seleccionar una región — Esc para cancelar',
-    language: 'Idioma'
+    language: 'Idioma',
+    gate_subtitle: 'Introduce tu código de activación',
+    gate_button: 'Activar',
+    gate_note: 'El código queda vinculado a este dispositivo tras la activación.',
+    gate_error_empty: 'Introduce un código',
+    gate_error_invalid: 'Código no válido',
+    gate_error_used: 'Este código ya está activado en otro dispositivo',
+    gate_error_network: 'Error de conexión, inténtalo de nuevo',
+    gate_error_bad_request: 'Algo salió mal, inténtalo de nuevo',
+    gate_error_method: 'Algo salió mal, inténtalo de nuevo'
   },
   fr: {
     what_to_record: 'Quoi enregistrer',
@@ -350,7 +386,16 @@ const STRINGS = {
     phone_instructions_iphone_mac: 'Vous pouvez aussi connecter un iPhone par câble — il sera détecté automatiquement.',
     phone_instructions_iphone_windows: 'La duplication d’iPhone n’est disponible que sur Mac.',
     region_overlay_hint: 'Faites glisser pour sélectionner une région — Échap pour annuler',
-    language: 'Langue'
+    language: 'Langue',
+    gate_subtitle: 'Entrez votre code d’activation',
+    gate_button: 'Activer',
+    gate_note: 'Le code est verrouillé sur cet appareil après activation.',
+    gate_error_empty: 'Entrez un code',
+    gate_error_invalid: 'Code invalide',
+    gate_error_used: 'Ce code est déjà activé sur un autre appareil',
+    gate_error_network: 'Erreur de connexion, réessayez',
+    gate_error_bad_request: 'Une erreur est survenue, réessayez',
+    gate_error_method: 'Une erreur est survenue, réessayez'
   },
   pt: {
     what_to_record: 'O que gravar',
@@ -417,7 +462,16 @@ const STRINGS = {
     phone_instructions_iphone_mac: 'Você também pode conectar um iPhone por cabo — ele será detectado automaticamente.',
     phone_instructions_iphone_windows: 'O espelhamento de iPhone só está disponível no Mac.',
     region_overlay_hint: 'Arraste para selecionar uma região — Esc para cancelar',
-    language: 'Idioma'
+    language: 'Idioma',
+    gate_subtitle: 'Digite seu código de ativação',
+    gate_button: 'Ativar',
+    gate_note: 'O código fica vinculado a este dispositivo após a ativação.',
+    gate_error_empty: 'Digite um código',
+    gate_error_invalid: 'Código inválido',
+    gate_error_used: 'Este código já foi ativado em outro dispositivo',
+    gate_error_network: 'Erro de conexão, tente novamente',
+    gate_error_bad_request: 'Algo deu errado, tente novamente',
+    gate_error_method: 'Algo deu errado, tente novamente'
   },
   it: {
     what_to_record: 'Cosa registrare',
@@ -484,7 +538,16 @@ const STRINGS = {
     phone_instructions_iphone_mac: 'Puoi anche collegare un iPhone via cavo — verrà rilevato automaticamente.',
     phone_instructions_iphone_windows: 'Il mirroring dell’iPhone è disponibile solo su Mac.',
     region_overlay_hint: 'Trascina per selezionare un’area — Esc per annullare',
-    language: 'Lingua'
+    language: 'Lingua',
+    gate_subtitle: 'Inserisci il codice di attivazione',
+    gate_button: 'Attiva',
+    gate_note: 'Il codice viene associato a questo dispositivo dopo l’attivazione.',
+    gate_error_empty: 'Inserisci un codice',
+    gate_error_invalid: 'Codice non valido',
+    gate_error_used: 'Questo codice è già stato attivato su un altro dispositivo',
+    gate_error_network: 'Errore di connessione, riprova',
+    gate_error_bad_request: 'Qualcosa è andato storto, riprova',
+    gate_error_method: 'Qualcosa è andato storto, riprova'
   },
   tr: {
     what_to_record: 'Ne kaydedilecek',
@@ -551,7 +614,16 @@ const STRINGS = {
     phone_instructions_iphone_mac: 'Ayrıca bir iPhone\'u kablo ile de bağlayabilirsiniz — otomatik olarak algılanır.',
     phone_instructions_iphone_windows: 'iPhone yansıtma yalnızca Mac\'te kullanılabilir.',
     region_overlay_hint: 'Alan seçmek için sürükleyin — İptal için Esc',
-    language: 'Dil'
+    language: 'Dil',
+    gate_subtitle: 'Etkinleştirme kodunuzu girin',
+    gate_button: 'Etkinleştir',
+    gate_note: 'Kod, etkinleştirildikten sonra bu cihaza kilitlenir.',
+    gate_error_empty: 'Bir kod girin',
+    gate_error_invalid: 'Geçersiz kod',
+    gate_error_used: 'Bu kod başka bir cihazda zaten etkinleştirilmiş',
+    gate_error_network: 'Bağlantı hatası, tekrar deneyin',
+    gate_error_bad_request: 'Bir şeyler ters gitti, tekrar deneyin',
+    gate_error_method: 'Bir şeyler ters gitti, tekrar deneyin'
   },
   az: {
     what_to_record: 'Nə qeyd ediləcək',
@@ -618,7 +690,16 @@ const STRINGS = {
     phone_instructions_iphone_mac: 'iPhone-u kabellə də qoşa bilərsiniz — avtomatik aşkarlanacaq.',
     phone_instructions_iphone_windows: 'iPhone güzgülənməsi yalnız Mac-də mövcuddur.',
     region_overlay_hint: 'Sahə seçmək üçün sürükləyin — İmtina üçün Esc',
-    language: 'Dil'
+    language: 'Dil',
+    gate_subtitle: 'Aktivasiya kodunu daxil edin',
+    gate_button: 'Aktivləşdir',
+    gate_note: 'Kod aktivləşdirildikdən sonra bu cihaza bağlanır.',
+    gate_error_empty: 'Kod daxil edin',
+    gate_error_invalid: 'Yanlış kod',
+    gate_error_used: 'Bu kod artıq başqa cihazda aktivləşdirilib',
+    gate_error_network: 'Bağlantı xətası, yenidən cəhd edin',
+    gate_error_bad_request: 'Nəsə səhv getdi, yenidən cəhd edin',
+    gate_error_method: 'Nəsə səhv getdi, yenidən cəhd edin'
   },
   hi: {
     what_to_record: 'क्या रिकॉर्ड करना है',
@@ -685,7 +766,16 @@ const STRINGS = {
     phone_instructions_iphone_mac: 'आप iPhone को केबल से भी जोड़ सकते हैं — यह अपने आप पहचाना जाएगा।',
     phone_instructions_iphone_windows: 'iPhone मिररिंग केवल Mac पर उपलब्ध है।',
     region_overlay_hint: 'क्षेत्र चुनने के लिए खींचें — रद्द करने के लिए Esc',
-    language: 'भाषा'
+    language: 'भाषा',
+    gate_subtitle: 'अपना सक्रियण कोड दर्ज करें',
+    gate_button: 'सक्रिय करें',
+    gate_note: 'सक्रिय होने के बाद कोड इस डिवाइस से लॉक हो जाता है।',
+    gate_error_empty: 'एक कोड दर्ज करें',
+    gate_error_invalid: 'अमान्य कोड',
+    gate_error_used: 'यह कोड पहले से ही किसी अन्य डिवाइस पर सक्रिय है',
+    gate_error_network: 'कनेक्शन त्रुटि, फिर से प्रयास करें',
+    gate_error_bad_request: 'कुछ गलत हो गया, फिर से प्रयास करें',
+    gate_error_method: 'कुछ गलत हो गया, फिर से प्रयास करें'
   },
   ar: {
     what_to_record: 'ما الذي سيتم تسجيله',
@@ -752,7 +842,16 @@ const STRINGS = {
     phone_instructions_iphone_mac: 'يمكنك أيضًا توصيل آيفون عبر الكابل — سيتم اكتشافه تلقائيًا.',
     phone_instructions_iphone_windows: 'مطابقة شاشة آيفون متاحة فقط على Mac.',
     region_overlay_hint: 'اسحب لتحديد منطقة — Esc للإلغاء',
-    language: 'اللغة'
+    language: 'اللغة',
+    gate_subtitle: 'أدخل رمز التفعيل',
+    gate_button: 'تفعيل',
+    gate_note: 'يتم ربط الرمز بهذا الجهاز بعد التفعيل.',
+    gate_error_empty: 'أدخل رمزًا',
+    gate_error_invalid: 'رمز غير صالح',
+    gate_error_used: 'تم تفعيل هذا الرمز بالفعل على جهاز آخر',
+    gate_error_network: 'خطأ في الاتصال، حاول مرة أخرى',
+    gate_error_bad_request: 'حدث خطأ ما، حاول مرة أخرى',
+    gate_error_method: 'حدث خطأ ما، حاول مرة أخرى'
   }
 };
 

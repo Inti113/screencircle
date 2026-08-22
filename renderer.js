@@ -52,6 +52,42 @@ window.api.getLanguage().then(lang => setLanguage(lang || 'en', false));
 languageSelect.addEventListener('change', () => setLanguage(languageSelect.value, true));
 window.api.onLanguageChanged((lang) => setLanguage(lang, false));
 
+// ---------- License activation gate ----------
+
+const gateEl = document.getElementById('gate');
+const appRootEl = document.getElementById('app-root');
+const codeInput = document.getElementById('code-input');
+const activateBtn = document.getElementById('activate-btn');
+const gateErrorEl = document.getElementById('gate-error');
+
+function showApp() {
+  gateEl.classList.add('hidden');
+  appRootEl.classList.remove('hidden');
+}
+
+if (dlIsActivated()) {
+  showApp();
+}
+
+async function tryActivate() {
+  const code = codeInput.value;
+  activateBtn.disabled = true;
+  gateErrorEl.textContent = '';
+  const result = await dlActivate(code);
+  activateBtn.disabled = false;
+  if (result.ok) {
+    showApp();
+  } else {
+    gateErrorEl.textContent = window.i18n.t('gate_error_' + result.reason, currentLang);
+    codeInput.focus();
+  }
+}
+
+activateBtn.addEventListener('click', tryActivate);
+codeInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') tryActivate();
+});
+
 overlayInfoBtn.addEventListener('click', () => {
   overlayInfoIncluded = !overlayInfoIncluded;
   overlayInfoBtn.classList.toggle('active', overlayInfoIncluded);

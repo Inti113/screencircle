@@ -6,7 +6,18 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="app">
+  <div id="gate" class="gate">
+    <div class="gate-box">
+      <h2 class="gate-title">ScreenCircle</h2>
+      <p class="gate-subtitle" data-i18n="gate_subtitle">Введите код активации</p>
+      <input id="code-input" class="gate-input" type="text" placeholder="XXXX-XXXX-XXXX-XXXX" autocomplete="off" spellcheck="false">
+      <button id="activate-btn" class="primary-btn" data-i18n="gate_button">Активировать</button>
+      <div id="gate-error" class="error"></div>
+      <div class="gate-note" data-i18n="gate_note">Код привязывается к этому устройству и подходит только для него.</div>
+    </div>
+  </div>
+
+  <div class="app hidden" id="app-root">
     <div class="top-bar">
       <h1>ScreenCircle</h1>
       <select id="language-select" class="language-select"></select>
@@ -159,6 +170,7 @@
   </div>
 
   <script src="i18n.js"></script>
+  <script src="device-lock.js"></script>
   <script src="renderer.js"></script>
 </body>
 </html>
