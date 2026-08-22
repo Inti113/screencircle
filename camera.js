@@ -3,8 +3,16 @@ const errorEl = document.getElementById('error');
 const resizeHandle = document.getElementById('resize-handle');
 const circleEl = document.getElementById('circle');
 
+let currentLang = 'en';
+let cameraError = null;
+
 window.cameraApi.onSetShape((shape) => {
   circleEl.classList.toggle('square', shape === 'square');
+});
+
+window.cameraApi.onLanguageChanged((lang) => {
+  currentLang = lang;
+  if (cameraError) errorEl.textContent = window.i18n.t('camera_unavailable', currentLang) + cameraError;
 });
 
 navigator.mediaDevices.getUserMedia({ video: true, audio: false })
@@ -12,9 +20,10 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
     video.srcObject = stream;
   })
   .catch(err => {
+    cameraError = err.message;
     video.style.display = 'none';
     errorEl.style.display = 'flex';
-    errorEl.textContent = 'Камера недоступна: ' + err.message;
+    errorEl.textContent = window.i18n.t('camera_unavailable', currentLang) + err.message;
   });
 
 document.getElementById('circle').addEventListener('wheel', (e) => {

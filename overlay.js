@@ -2,6 +2,10 @@ const selectionEl = document.getElementById('selection');
 let startX = 0, startY = 0;
 let dragging = false;
 
+window.overlayApi.onLanguageChanged((lang) => {
+  window.i18n.applyTranslations(lang);
+});
+
 document.addEventListener('mousedown', (e) => {
   dragging = true;
   startX = e.clientX;

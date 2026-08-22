@@ -35,14 +35,42 @@ body:has(#recording-view:not(.hidden)) .app {
   padding: 10px;
 }
 
-body:has(#recording-view:not(.hidden)) h1 {
+body:has(#recording-view:not(.hidden)) .top-bar {
   display: none;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 8px;
 }
 
 h1 {
   font-size: 17px;
-  margin: 0 0 8px;
+  margin: 0;
   text-align: center;
+}
+
+.language-select {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #2a2b32;
+  color: #cfcfd6;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 3px 6px;
+  font-size: 11px;
+  font-family: inherit;
+  max-width: 100px;
+}
+
+html[dir="rtl"] .language-select {
+  right: auto;
+  left: 0;
 }
 
 .view.hidden {

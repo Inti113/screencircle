@@ -31,6 +31,26 @@ const overlayInfoBtn = document.getElementById('overlay-info-btn');
 const overlayVisibleBtn = document.getElementById('overlay-visible-btn');
 let overlayInfoIncluded = false;
 let overlayVisible = true;
+let currentLang = 'en';
+
+const languageSelect = document.getElementById('language-select');
+window.i18n.LANGS.forEach(code => {
+  const opt = document.createElement('option');
+  opt.value = code;
+  opt.textContent = window.i18n.LANG_NAMES[code];
+  languageSelect.appendChild(opt);
+});
+
+function setLanguage(lang, persist) {
+  currentLang = lang;
+  languageSelect.value = lang;
+  window.i18n.applyTranslations(lang);
+  if (persist) window.api.setLanguage(lang);
+}
+
+window.api.getLanguage().then(lang => setLanguage(lang || 'en', false));
+languageSelect.addEventListener('change', () => setLanguage(languageSelect.value, true));
+window.api.onLanguageChanged((lang) => setLanguage(lang, false));
 
 overlayInfoBtn.addEventListener('click', () => {
   overlayInfoIncluded = !overlayInfoIncluded;
@@ -153,7 +173,7 @@ function onSourceTypeChange() {
 }
 
 async function loadWindowList() {
-  windowGrid.innerHTML = '<div class="hint">Загрузка…</div>';
+  windowGrid.innerHTML = `<div class="hint">${window.i18n.t('loading', currentLang)}</div>`;
   const sources = await window.api.getSources(['window']);
   windowGrid.innerHTML = '';
   selectedWindowId = null;
@@ -169,7 +189,7 @@ async function loadWindowList() {
     windowGrid.appendChild(item);
   });
   if (sources.length === 0) {
-    windowGrid.innerHTML = '<div class="hint">Открытые окна не найдены</div>';
+    windowGrid.innerHTML = `<div class="hint">${window.i18n.t('no_windows', currentLang)}</div>`;
   }
 }
 
@@ -198,15 +218,16 @@ document.querySelectorAll('input[name="camera-shape"]').forEach(radio => {
 });
 
 pickRegionBtn.addEventListener('click', async () => {
-  regionStatus.textContent = 'Выделите область на экране…';
+  regionStatus.textContent = window.i18n.t('region_prompt', currentLang);
   const region = await window.api.selectRegion();
   if (!region || !region.sourceId) {
-    regionStatus.textContent = 'Область не выбрана';
+    regionStatus.textContent = window.i18n.t('region_none', currentLang);
     selectedRegion = null;
     return;
   }
   selectedRegion = region;
-  regionStatus.textContent = `Выбрано: ${region.width}×${region.height}`;
+  regionStatus.textContent = window.i18n.t('region_selected', currentLang)
+    .replace('{w}', region.width).replace('{h}', region.height);
 });
 
 startBtn.addEventListener('click', async () => {
@@ -219,14 +240,14 @@ startBtn.addEventListener('click', async () => {
 
   if (type === 'screen') {
     const screenSource = await window.api.getPrimaryScreenSource();
-    if (!screenSource) { setError('Не удалось получить доступ к экрану'); return; }
+    if (!screenSource) { setError(window.i18n.t('error_screen_access', currentLang)); return; }
     sourceId = screenSource.id;
     nativeDims = { width: screenInfo.width, height: screenInfo.height };
   } else if (type === 'window') {
-    if (!selectedWindowId) { setError('Выберите окно из списка'); return; }
+    if (!selectedWindowId) { setError(window.i18n.t('error_choose_window', currentLang)); return; }
     sourceId = selectedWindowId;
   } else if (type === 'region') {
-    if (!selectedRegion) { setError('Сначала выделите область'); return; }
+    if (!selectedRegion) { setError(window.i18n.t('error_select_region_first', currentLang)); return; }
     sourceId = selectedRegion.sourceId;
     crop = {
       x: selectedRegion.x,
@@ -260,7 +281,7 @@ startBtn.addEventListener('click', async () => {
       }
     });
   } catch (err) {
-    setError('Не удалось начать захват: ' + err.message);
+    setError(window.i18n.t('error_capture_failed', currentLang) + err.message);
     return;
   }
   extraAudioStreams.push(desktopStream);
@@ -285,7 +306,7 @@ startBtn.addEventListener('click', async () => {
       micStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
       extraAudioStreams.push(micStream);
     } catch (err) {
-      setError('Не удалось получить доступ к микрофону: ' + err.message);
+      setError(window.i18n.t('error_mic_failed', currentLang) + err.message);
     }
   }
 
@@ -421,7 +442,7 @@ async function finishRecording(outputPath, crop, format) {
       showView(doneView);
     }
   } else {
-    setError('Ошибка сохранения: ' + result.error);
+    setError(window.i18n.t('error_save_failed', currentLang) + result.error);
     showView(setupView);
   }
 }

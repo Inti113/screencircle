@@ -20,5 +20,8 @@ contextBridge.exposeInMainWorld('api', {
   cameraHide: () => ipcRenderer.send('camera-hide'),
   cameraSetIncluded: (included) => ipcRenderer.send('camera-set-included', included),
   cameraSetShape: (shape) => ipcRenderer.send('camera-set-shape', shape),
-  showItemInFolder: (filePath) => ipcRenderer.send('show-item-in-folder', filePath)
+  showItemInFolder: (filePath) => ipcRenderer.send('show-item-in-folder', filePath),
+  getLanguage: () => ipcRenderer.invoke('get-language'),
+  setLanguage: (lang) => ipcRenderer.send('set-language', lang),
+  onLanguageChanged: (callback) => ipcRenderer.on('language-changed', (event, lang) => callback(lang))
 });

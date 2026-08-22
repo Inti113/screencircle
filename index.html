@@ -7,76 +7,79 @@
 </head>
 <body>
   <div class="app">
-    <h1>ScreenCircle</h1>
+    <div class="top-bar">
+      <h1>ScreenCircle</h1>
+      <select id="language-select" class="language-select"></select>
+    </div>
 
     <div id="setup-view" class="view">
       <div class="field">
-        <div class="label">Что записывать</div>
+        <div class="label" data-i18n="what_to_record">Что записывать</div>
         <div class="options">
           <label class="option">
             <input type="radio" name="source-type" value="screen" checked>
-            <span>Весь экран</span>
+            <span data-i18n="opt_full_screen">Весь экран</span>
           </label>
           <label class="option">
             <input type="radio" name="source-type" value="window">
-            <span>Окно приложения</span>
+            <span data-i18n="opt_window">Окно приложения</span>
           </label>
           <label class="option">
             <input type="radio" name="source-type" value="region">
-            <span>Произвольная область</span>
+            <span data-i18n="opt_region">Произвольная область</span>
           </label>
         </div>
       </div>
 
       <div id="window-list" class="field hidden">
-        <div class="label">Выберите окно</div>
+        <div class="label" data-i18n="choose_window">Выберите окно</div>
         <div id="window-grid" class="window-grid"></div>
       </div>
 
       <div id="region-picker" class="field hidden">
-        <button id="pick-region-btn" class="secondary-btn">Выделить область на экране</button>
+        <button id="pick-region-btn" class="secondary-btn" data-i18n="pick_region_btn">Выделить область на экране</button>
         <div id="region-status" class="hint"></div>
       </div>
 
       <div class="field">
         <label class="option">
           <input type="checkbox" id="camera-toggle">
-          <span>Включить веб-камеру</span>
+          <span data-i18n="enable_camera">Включить веб-камеру</span>
         </label>
         <div id="camera-options-row" class="chip-row chip-row-disabled">
           <label class="chip">
             <input type="checkbox" id="camera-include-toggle" checked disabled>
-            <span>В файл</span>
+            <span data-i18n="chip_camera_file">В файл</span>
           </label>
           <label class="chip">
             <input type="radio" name="camera-shape" value="circle" checked disabled>
-            <span>Круг</span>
+            <span data-i18n="chip_camera_circle">Круг</span>
           </label>
           <label class="chip">
             <input type="radio" name="camera-shape" value="square" disabled>
-            <span>Квадрат</span>
+            <span data-i18n="chip_camera_square">Квадрат</span>
           </label>
         </div>
       </div>
 
       <div class="field">
-        <div class="label">Звук</div>
+        <div class="label" data-i18n="sound">Звук</div>
         <div class="chip-row">
           <button type="button" id="mic-toggle-btn" class="chip-btn">
             <svg viewBox="0 0 24 24" width="15" height="15"><path fill="currentColor" d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg>
-            <span>Микрофон</span>
+            <span data-i18n="chip_mic">Микрофон</span>
           </button>
           <button type="button" id="system-audio-toggle-btn" class="chip-btn">
             <svg viewBox="0 0 24 24" width="15" height="15"><path fill="currentColor" d="M3 10v4h4l5 5V5L7 10H3zm13.5 2A4.5 4.5 0 0 0 14 7.97v8.05A4.5 4.5 0 0 0 16.5 12zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z"/></svg>
-            <span>Системный звук</span>
+            <span data-i18n="chip_system_audio">Системный звук</span>
           </button>
         </div>
       </div>
 
       <div class="field">
-        <div class="label">Качество записи</div>
+        <div class="label" data-i18n="quality">Качество записи</div>
         <div class="chip-row">
-          <button type="button" id="quality-auto-btn" class="chip-btn active">Авто</button>
+          <button type="button" id="quality-auto-btn" class="chip-btn active" data-i18n="chip_auto">Авто</button>
           <select id="resolution-select" class="quality-select" disabled>
             <option value="1280x720">720p</option>
             <option value="1920x1080">1080p</option>
@@ -92,27 +95,27 @@
       </div>
 
       <div class="field">
-        <div class="label">Дата/время и длительность</div>
+        <div class="label" data-i18n="datetime_duration">Дата/время и длительность</div>
         <div class="chip-row">
-          <button type="button" id="overlay-visible-btn" class="chip-btn active">Показывать на экране</button>
-          <button type="button" id="overlay-info-btn" class="chip-btn">В файл</button>
+          <button type="button" id="overlay-visible-btn" class="chip-btn active" data-i18n="chip_show_on_screen">Показывать на экране</button>
+          <button type="button" id="overlay-info-btn" class="chip-btn" data-i18n="chip_in_file">В файл</button>
         </div>
       </div>
 
       <div class="field">
-        <div class="label">Длительность записи</div>
+        <div class="label" data-i18n="duration">Длительность записи</div>
         <div class="chip-row">
-          <button type="button" class="chip-btn duration-btn active" data-minutes="0">Без ограничения</button>
-          <button type="button" class="chip-btn duration-btn" data-minutes="5">5 мин</button>
-          <button type="button" class="chip-btn duration-btn" data-minutes="10">10 мин</button>
-          <button type="button" class="chip-btn duration-btn" data-minutes="20">20 мин</button>
-          <button type="button" class="chip-btn duration-btn" data-minutes="30">30 мин</button>
-          <button type="button" class="chip-btn duration-btn" data-minutes="60">1 час</button>
+          <button type="button" class="chip-btn duration-btn active" data-minutes="0" data-i18n="duration_unlimited">Без ограничения</button>
+          <button type="button" class="chip-btn duration-btn" data-minutes="5" data-i18n="duration_5min">5 мин</button>
+          <button type="button" class="chip-btn duration-btn" data-minutes="10" data-i18n="duration_10min">10 мин</button>
+          <button type="button" class="chip-btn duration-btn" data-minutes="20" data-i18n="duration_20min">20 мин</button>
+          <button type="button" class="chip-btn duration-btn" data-minutes="30" data-i18n="duration_30min">30 мин</button>
+          <button type="button" class="chip-btn duration-btn" data-minutes="60" data-i18n="duration_1hour">1 час</button>
         </div>
       </div>
 
       <div class="field">
-        <div class="label">Формат файла</div>
+        <div class="label" data-i18n="file_format">Формат файла</div>
         <div class="chip-row">
           <button type="button" class="chip-btn format-btn active" data-format="mp4">MP4</button>
           <button type="button" class="chip-btn format-btn" data-format="mov">MOV</button>
@@ -122,39 +125,40 @@
       </div>
 
       <div class="field">
-        <div class="label">После записи</div>
+        <div class="label" data-i18n="after_recording">После записи</div>
         <div class="chip-row">
-          <button type="button" class="chip-btn after-btn" data-after="folder">Открыть папку с файлом</button>
-          <button type="button" class="chip-btn after-btn active" data-after="preview">Показать превью</button>
-          <button type="button" class="chip-btn after-btn" data-after="silent">Сохранить</button>
+          <button type="button" class="chip-btn after-btn" data-after="folder" data-i18n="after_folder">Открыть папку с файлом</button>
+          <button type="button" class="chip-btn after-btn active" data-after="preview" data-i18n="after_preview">Показать превью</button>
+          <button type="button" class="chip-btn after-btn" data-after="silent" data-i18n="after_save">Сохранить</button>
         </div>
       </div>
 
-      <button id="start-btn" class="primary-btn">Начать запись</button>
+      <button id="start-btn" class="primary-btn" data-i18n="start_recording">Начать запись</button>
       <div id="setup-error" class="error"></div>
     </div>
 
     <div id="recording-view" class="view hidden">
       <div class="recording-indicator">
-        <span class="dot"></span> Идёт запись…
+        <span class="dot"></span> <span data-i18n="recording_indicator">Идёт запись…</span>
         <span id="timer">00:00</span>
       </div>
-      <button id="stop-btn" class="danger-btn">Остановить запись</button>
+      <button id="stop-btn" class="danger-btn" data-i18n="stop_recording">Остановить запись</button>
     </div>
 
     <div id="saving-view" class="view hidden">
       <div class="spinner"></div>
-      <div>Сохранение видео…</div>
+      <div data-i18n="saving_video">Сохранение видео…</div>
     </div>
 
     <div id="done-view" class="view hidden">
       <div id="done-icon-wrap" class="done-icon">✓</div>
       <video id="done-preview" class="hidden" controls></video>
       <div id="done-path" class="done-path"></div>
-      <button id="new-recording-btn" class="secondary-btn">Новая запись</button>
+      <button id="new-recording-btn" class="secondary-btn" data-i18n="new_recording">Новая запись</button>
     </div>
   </div>
 
+  <script src="i18n.js"></script>
   <script src="renderer.js"></script>
 </body>
 </html>

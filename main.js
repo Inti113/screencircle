@@ -18,10 +18,40 @@ const CAMERA_MIN_SIZE = 100;
 const CAMERA_MAX_SIZE = 480;
 let cameraShape = 'circle';
 
+// ---------- Settings (language) ----------
+
+const SETTINGS_PATH = () => path.join(app.getPath('userData'), 'settings.json');
+
+function loadSettings() {
+  try {
+    return JSON.parse(fs.readFileSync(SETTINGS_PATH(), 'utf8'));
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveSettings(settings) {
+  try {
+    fs.writeFileSync(SETTINGS_PATH(), JSON.stringify(settings));
+  } catch (e) { /* ignore */ }
+}
+
+let currentLanguage = loadSettings().language || 'en';
+
+ipcMain.handle('get-language', () => currentLanguage);
+
+ipcMain.on('set-language', (event, lang) => {
+  currentLanguage = lang;
+  saveSettings({ ...loadSettings(), language: lang });
+  [mainWindow, widgetWindow, cameraWindow, infoOverlayWindow, ...overlayWindows].forEach(win => {
+    if (win && !win.isDestroyed()) win.webContents.send('language-changed', lang);
+  });
+});
+
 function createMainWindow() {
   mainWindow = new BrowserWindow({
     width: 520,
-    height: 700,
+    height: 730,
     minWidth: 460,
     minHeight: 500,
     resizable: true,
@@ -54,6 +84,9 @@ function createWidgetWindow() {
     }
   });
   widgetWindow.loadFile('widget.html');
+  widgetWindow.webContents.once('did-finish-load', () => {
+    widgetWindow.webContents.send('language-changed', currentLanguage);
+  });
 }
 
 ipcMain.on('recording-started', (event, { overlayInfoIncluded, overlayVisible = true } = {}) => {
@@ -130,6 +163,9 @@ function createInfoOverlayWindow() {
   });
   infoOverlayWindow.setAlwaysOnTop(true, 'screen-saver');
   infoOverlayWindow.loadFile('info-overlay.html');
+  infoOverlayWindow.webContents.once('did-finish-load', () => {
+    infoOverlayWindow.webContents.send('language-changed', currentLanguage);
+  });
   infoOverlayWindow.on('closed', () => { infoOverlayWindow = null; });
 }
 
@@ -167,6 +203,7 @@ function createCameraWindow() {
   cameraWindow.loadFile('camera.html');
   cameraWindow.webContents.once('did-finish-load', () => {
     cameraWindow.webContents.send('set-shape', cameraShape);
+    cameraWindow.webContents.send('language-changed', currentLanguage);
   });
   cameraWindow.on('closed', () => { cameraWindow = null; });
 }
@@ -314,6 +351,9 @@ ipcMain.handle('select-region', async () => {
       win.setAlwaysOnTop(true, 'screen-saver');
       win.setIgnoreMouseEvents(false);
       win.loadFile('overlay.html');
+      win.webContents.once('did-finish-load', () => {
+        win.webContents.send('language-changed', currentLanguage);
+      });
       win.displayInfo = display;
       overlayWindows.push(win);
     });
@@ -360,11 +400,18 @@ const FORMAT_FILTERS = {
   webm: { name: 'WebM Video', extensions: ['webm'] }
 };
 
+const SAVE_DIALOG_TITLES = {
+  en: 'Save Recording', ru: 'Сохранить запись', de: 'Aufnahme speichern',
+  es: 'Guardar grabación', fr: 'Enregistrer la vidéo', pt: 'Salvar gravação',
+  it: 'Salva registrazione', tr: 'Kaydı Kaydet', az: 'Qeydi yadda saxla',
+  hi: 'रिकॉर्डिंग सहेजें', ar: 'حفظ التسجيل'
+};
+
 ipcMain.handle('choose-save-path', async (event, format) => {
   const fmt = FORMAT_FILTERS[format] ? format : 'mp4';
   const filter = FORMAT_FILTERS[fmt];
   const result = await dialog.showSaveDialog(mainWindow, {
-    title: 'Сохранить запись',
+    title: SAVE_DIALOG_TITLES[currentLanguage] || SAVE_DIALOG_TITLES.en,
     defaultPath: path.join(app.getPath('videos'), `ScreenCircle-${Date.now()}.${filter.extensions[0]}`),
     filters: [filter]
   });

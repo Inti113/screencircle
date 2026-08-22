@@ -6,5 +6,6 @@ contextBridge.exposeInMainWorld('widgetApi', {
   toggleCamera: () => ipcRenderer.send('camera-toggle'),
   onState: (callback) => ipcRenderer.on('recording-state', (event, state) => callback(state)),
   onCameraVisibility: (callback) => ipcRenderer.on('camera-visibility', (event, visible) => callback(visible)),
-  onCameraAvailable: (callback) => ipcRenderer.on('camera-available', (event, available) => callback(available))
+  onCameraAvailable: (callback) => ipcRenderer.on('camera-available', (event, available) => callback(available)),
+  onLanguageChanged: (callback) => ipcRenderer.on('language-changed', (event, lang) => callback(lang))
 });
