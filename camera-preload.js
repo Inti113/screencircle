@@ -6,6 +6,6 @@ contextBridge.exposeInMainWorld('cameraApi', {
   onLanguageChanged: (callback) => ipcRenderer.on('language-changed', (event, lang) => callback(lang)),
   getPlatform: () => ipcRenderer.invoke('get-platform'),
   phoneCheckAndroid: () => ipcRenderer.invoke('phone-check-android'),
-  phoneMirrorStart: () => ipcRenderer.invoke('phone-mirror-start'),
+  phoneMirrorStart: (serial) => ipcRenderer.invoke('phone-mirror-start', serial),
   phoneMirrorStop: () => ipcRenderer.invoke('phone-mirror-stop')
 });

@@ -123,7 +123,7 @@ async function pollPhone() {
   if (source !== 'phone') return;
   if (status.connected) {
     setStatus('checking');
-    const started = await window.cameraApi.phoneMirrorStart();
+    const started = await window.cameraApi.phoneMirrorStart(status.serial);
     if (source !== 'phone') {
       if (started) window.cameraApi.phoneMirrorStop();
       return;

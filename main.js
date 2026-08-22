@@ -36,7 +36,18 @@ function runAdb(args) {
 }
 
 function parseAdbDevices(list) {
-  return list.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('List of devices'));
+  return list.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('List of devices'))
+    .map(l => {
+      const [serial, status] = l.split(/\s+/);
+      return { serial, status };
+    });
+}
+
+async function cleanupOfflineDevices(entries) {
+  const offline = entries.filter(e => e.status === 'offline' && e.serial.includes(':'));
+  for (const e of offline) {
+    await runAdb(['disconnect', e.serial]);
+  }
 }
 
 function setupWifiForDevice(serial) {
@@ -56,30 +67,42 @@ function setupWifiForDevice(serial) {
 }
 
 ipcMain.handle('phone-check-android', async () => {
-  let list = await runAdb(['devices']);
-  let lines = parseAdbDevices(list);
+  let entries = parseAdbDevices(await runAdb(['devices']));
 
-  if (lines.length === 0) {
+  // A stuck "offline" Wi-Fi entry can shadow a perfectly working USB connection
+  // in some adb server states — clear it out and re-enumerate.
+  const hasOffline = entries.some(e => e.status === 'offline');
+  const hasWorking = entries.some(e => e.status === 'device');
+  if (hasOffline && !hasWorking) {
+    await cleanupOfflineDevices(entries);
+    entries = parseAdbDevices(await runAdb(['devices']));
+  }
+
+  if (entries.length === 0) {
     const { lastPhoneIp } = loadSettings();
     if (lastPhoneIp) {
       await runAdb(['connect', `${lastPhoneIp}:5555`]);
-      list = await runAdb(['devices']);
-      lines = parseAdbDevices(list);
+      entries = parseAdbDevices(await runAdb(['devices']));
     }
   }
 
-  if (lines.length === 0) return { connected: false };
-  const [serial, status] = lines[0].split(/\s+/);
-  if (status === 'unauthorized') return { connected: false, unauthorized: true };
-  if (status !== 'device') return { connected: false };
+  if (entries.length === 0) return { connected: false };
+
+  const working = entries.find(e => e.status === 'device');
+  if (!working) {
+    if (entries.some(e => e.status === 'unauthorized')) return { connected: false, unauthorized: true };
+    return { connected: false };
+  }
+
+  const { serial } = working;
   const model = (await runAdb(['-s', serial, 'shell', 'getprop', 'ro.product.model'])).trim();
   if (!serial.includes(':')) {
     setupWifiForDevice(serial);
   }
-  return { connected: true, name: model || serial };
+  return { connected: true, name: model || serial, serial };
 });
 
-ipcMain.handle('phone-mirror-start', () => {
+ipcMain.handle('phone-mirror-start', (event, serial) => {
   if (phoneMirrorProcess) return true;
   const { scrcpy } = getScrcpyPaths();
   const display = screen.getPrimaryDisplay();
@@ -89,6 +112,7 @@ ipcMain.handle('phone-mirror-start', () => {
   const y = display.workArea.y + display.workArea.height - h - 24;
   try {
     phoneMirrorProcess = spawn(scrcpy, [
+      ...(serial ? ['-s', serial] : []),
       '--window-title=ScreenCircle - Phone',
       `--window-x=${Math.round(x)}`,
       `--window-y=${Math.round(y)}`,
